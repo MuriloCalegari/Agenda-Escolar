@@ -246,4 +246,11 @@ public class MainActivity extends AppCompatActivity
         }
 
     }
+
+	public static void setDrawerIdleMode() {
+		// The following lines makes the user able to open the drawer after coming from a
+		// subject grade fragment
+		toolbar.setNavigationOnClickListener(v -> drawer.openDrawer(GravityCompat.START));
+		drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+	}
 }

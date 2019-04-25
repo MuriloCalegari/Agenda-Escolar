@@ -71,6 +71,16 @@ public class HomeFragment extends Fragment {
 		gradesChartCardView.setOnClickListener(v -> MainActivity.startFragment(GradesFragment.class, true));
 	}
 
+	@Override
+	public void onResume() {
+		super.onResume();
+
+		AppCompatActivity activity = (AppCompatActivity) getContext();
+		activity.getSupportActionBar().setTitle(R.string.app_name);
+		MainActivity.navigationView.setCheckedItem(R.id.nav_home);
+		MainActivity.setDrawerIdleMode();
+	}
+
 	private void setupGradesChart() {
 		SubjectDatabaseHelper subjectDatabaseHelper = new SubjectDatabaseHelper(getContext());
 

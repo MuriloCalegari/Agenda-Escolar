@@ -38,112 +38,112 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+		implements NavigationView.OnNavigationItemSelectedListener {
 
-    public static DrawerLayout drawer;
-    public static ValueAnimator anim;
-    public static Toolbar toolbar;
-    public static FragmentManager fragmentManager;
-    public static NavigationView navigationView;
-    private ActionBarDrawerToggle drawerToggle;
+	public static DrawerLayout drawer;
+	public static ValueAnimator anim;
+	public static Toolbar toolbar;
+	public static FragmentManager fragmentManager;
+	public static NavigationView navigationView;
+	private ActionBarDrawerToggle drawerToggle;
 
-    private ImageButton changeUsernameButton;
+	private ImageButton changeUsernameButton;
 	TextView usernameTextView;
 
 	int NAVBAR_CLOSE_DELAY;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 
-        getWindow().setFlags(
-                WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
-                WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
+		getWindow().setFlags(
+				WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
+				WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
 
-        setContentView(R.layout.activity_main);
+		setContentView(R.layout.activity_main);
 
-        toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+		toolbar = findViewById(R.id.toolbar);
+		setSupportActionBar(toolbar);
 
-        drawer = findViewById(R.id.drawer_layout);
+		drawer = findViewById(R.id.drawer_layout);
 
-        NAVBAR_CLOSE_DELAY = getResources().getInteger(R.integer.navigation_bar_close_delay);
+		NAVBAR_CLOSE_DELAY = getResources().getInteger(R.integer.navigation_bar_close_delay);
 
-        navigationView = findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+		navigationView = findViewById(R.id.nav_view);
+		navigationView.setNavigationItemSelectedListener(this);
 
-        fragmentManager = getSupportFragmentManager();
+		fragmentManager = getSupportFragmentManager();
 
-        drawerToggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawerToggle.syncState();
+		drawerToggle = new ActionBarDrawerToggle(
+				this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+		drawerToggle.syncState();
 
-        View header = navigationView.getHeaderView(0);
-	    changeUsernameButton = header.findViewById(R.id.changeUserNameButton);
-	    usernameTextView = header.findViewById(R.id.username);
+		View header = navigationView.getHeaderView(0);
+		changeUsernameButton = header.findViewById(R.id.changeUserNameButton);
+		usernameTextView = header.findViewById(R.id.username);
 
-	    updateUsername();
+		updateUsername();
 
-        setupListeners();
+		setupListeners();
 
-        startFragment(HomeFragment.class, false);
-    }
+		startFragment(HomeFragment.class, false);
+	}
 
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        setupListeners();
-    }
+	@Override
+	protected void onRestart() {
+		super.onRestart();
+		setupListeners();
+	}
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-    }
+	@Override
+	protected void onStop() {
+		super.onStop();
+	}
 
-    private void setupListeners() {
-        drawer.addDrawerListener(drawerToggle);
+	private void setupListeners() {
+		drawer.addDrawerListener(drawerToggle);
 
-        anim = ValueAnimator.ofFloat(0f, 1f);
-        anim.addUpdateListener(valueAnimator -> {
-            float slideOffset = (Float) valueAnimator.getAnimatedValue();
-            drawerToggle.onDrawerSlide(drawer, slideOffset);
-        });
+		anim = ValueAnimator.ofFloat(0f, 1f);
+		anim.addUpdateListener(valueAnimator -> {
+			float slideOffset = (Float) valueAnimator.getAnimatedValue();
+			drawerToggle.onDrawerSlide(drawer, slideOffset);
+		});
 
-        anim.setInterpolator(new DecelerateInterpolator());
-        // You can change this duration to more closely match that of the default animation.
-        anim.setDuration(250);
+		anim.setInterpolator(new DecelerateInterpolator());
+		// You can change this duration to more closely match that of the default animation.
+		anim.setDuration(250);
 
-	    changeUsernameButton.setOnClickListener(view -> setUsernameDialog());
-	    usernameTextView.setOnClickListener(view -> setUsernameDialog());
-    }
+		changeUsernameButton.setOnClickListener(view -> setUsernameDialog());
+		usernameTextView.setOnClickListener(view -> setUsernameDialog());
+	}
 
-    private void setUsernameDialog() {
-	    AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+	private void setUsernameDialog() {
+		AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
 
-	    TextInputLayout textInputLayout = new TextInputLayout(this);
-	    TextInputEditText editText = new TextInputEditText(textInputLayout.getContext());
+		TextInputLayout textInputLayout = new TextInputLayout(this);
+		TextInputEditText editText = new TextInputEditText(textInputLayout.getContext());
 
-	    FrameLayout editTextContainer = new FrameLayout(this);
-	    FrameLayout.LayoutParams params = new  FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-	    params.leftMargin = getResources().getDimensionPixelSize(R.dimen.dialog_margin);
-	    params.rightMargin = getResources().getDimensionPixelSize(R.dimen.dialog_margin);
-	    editText.setLayoutParams(params);
-	    editTextContainer.addView(editText);
+		FrameLayout editTextContainer = new FrameLayout(this);
+		FrameLayout.LayoutParams params = new  FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+		params.leftMargin = getResources().getDimensionPixelSize(R.dimen.dialog_margin);
+		params.rightMargin = getResources().getDimensionPixelSize(R.dimen.dialog_margin);
+		editText.setLayoutParams(params);
+		editTextContainer.addView(editText);
 
-	    dialogBuilder
-			    .setTitle(getString(R.string.edit_username))
-			    .setView(editTextContainer)
-			    //.setMessage(getString(R.string.confirm_subject_grade_delete_message))
-			    .setPositiveButton(getString(R.string.edit), ((dialogInterface, i) -> {
-				    SharedPreferences sharedPreferences = getPreferences(Context.MODE_PRIVATE);
-				    SharedPreferences.Editor editor = sharedPreferences.edit();
-				    editor.putString("username", String.valueOf(editText.getText()));
-				    editor.apply();
-				    updateUsername();
-			    }))
-			    .setNegativeButton(getString(R.string.cancel), (dialogInterface, i) -> {})
-			    .show();
-    }
+		dialogBuilder
+				.setTitle(getString(R.string.edit_username))
+				.setView(editTextContainer)
+				//.setMessage(getString(R.string.confirm_subject_grade_delete_message))
+				.setPositiveButton(getString(R.string.edit), ((dialogInterface, i) -> {
+					SharedPreferences sharedPreferences = getPreferences(Context.MODE_PRIVATE);
+					SharedPreferences.Editor editor = sharedPreferences.edit();
+					editor.putString("username", String.valueOf(editText.getText()));
+					editor.apply();
+					updateUsername();
+				}))
+				.setNegativeButton(getString(R.string.cancel), (dialogInterface, i) -> {})
+				.show();
+	}
 
 	private void updateUsername() {
 		SharedPreferences sharedPreferences = getPreferences(Context.MODE_PRIVATE);
@@ -153,34 +153,34 @@ public class MainActivity extends AppCompatActivity
 	}
 
 	@Override
-    public void onBackPressed() {
-        drawer = findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
+	public void onBackPressed() {
+		drawer = findViewById(R.id.drawer_layout);
+		if (drawer.isDrawerOpen(GravityCompat.START)) {
+			drawer.closeDrawer(GravityCompat.START);
+		} else {
+			super.onBackPressed();
+		}
+	}
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // The action bar home/up action should open or close the drawer.
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                drawer.openDrawer(GravityCompat.START);
-                return true;
-        }
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// The action bar home/up action should open or close the drawer.
+		switch (item.getItemId()) {
+			case android.R.id.home:
+				drawer.openDrawer(GravityCompat.START);
+				return true;
+		}
 
-        return super.onOptionsItemSelected(item);
-    }
+		return super.onOptionsItemSelected(item);
+	}
 
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(final MenuItem item) {
-        // Handle navigation view item clicks here.
-        final int id = item.getItemId();
+	@SuppressWarnings("StatementWithEmptyBody")
+	@Override
+	public boolean onNavigationItemSelected(final MenuItem item) {
+		// Handle navigation view item clicks here.
+		final int id = item.getItemId();
 
-        final Context context = this;
+		final Context context = this;
 
         /*
         Adds a delay to the fragment calling after navigation bar is being closed, I've tested three different methods
@@ -193,59 +193,59 @@ public class MainActivity extends AppCompatActivity
 
 		boolean useAnimations = !item.isChecked();
 
-        new Handler().postDelayed(() -> {
-            switch (id) {
-                case R.id.nav_home:
-                    toolbar.setTitle(getString(R.string.app_name));
+		new Handler().postDelayed(() -> {
+			switch (id) {
+				case R.id.nav_home:
+					toolbar.setTitle(getString(R.string.app_name));
 					startFragment(HomeFragment.class, useAnimations);
-                    break;
-                case R.id.nav_about:
-                    Intent aboutIntent = new Intent(context, AboutActivity.class);
-                    startActivity(aboutIntent);
-                    break;
-                case R.id.nav_settings:
-                    Intent settingsIntent = new Intent(context,SettingsActivity.class);
-                    startActivity(settingsIntent);
-                    break;
-                case R.id.nav_subjects:
-                    startFragment(SubjectsFragment.class, useAnimations);
-                    break;
-                case R.id.nav_grades:
-                    startFragment(GradesFragment.class, useAnimations);
-                    break;
-                case R.id.nav_schedules:
-                    startFragment(SchedulesFragment.class, useAnimations);
-                default:
-                    break;
-            }
-        }, NAVBAR_CLOSE_DELAY);
+					break;
+				case R.id.nav_about:
+					Intent aboutIntent = new Intent(context, AboutActivity.class);
+					startActivity(aboutIntent);
+					break;
+				case R.id.nav_settings:
+					Intent settingsIntent = new Intent(context,SettingsActivity.class);
+					startActivity(settingsIntent);
+					break;
+				case R.id.nav_subjects:
+					startFragment(SubjectsFragment.class, useAnimations);
+					break;
+				case R.id.nav_grades:
+					startFragment(GradesFragment.class, useAnimations);
+					break;
+				case R.id.nav_schedules:
+					startFragment(SchedulesFragment.class, useAnimations);
+				default:
+					break;
+			}
+		}, NAVBAR_CLOSE_DELAY);
 
-        drawer.closeDrawer(GravityCompat.START);
+		drawer.closeDrawer(GravityCompat.START);
 
-        return true;
-    }
+		return true;
+	}
 
-    public static void startFragment(Class fragmentClass, boolean useAnimations) {
+	public static void startFragment(Class fragmentClass, boolean useAnimations) {
 
-        Fragment fragment = null;
-        try {
-            fragment = (Fragment) fragmentClass.newInstance();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+		Fragment fragment = null;
+		try {
+			fragment = (Fragment) fragmentClass.newInstance();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
-        // Insert the fragment by replacing any existing fragment
-        if (fragment != null) {
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+		// Insert the fragment by replacing any existing fragment
+		if (fragment != null) {
+			FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-            if(useAnimations) {
-                fragmentTransaction.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
-            }
+			if(useAnimations) {
+				fragmentTransaction.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+			}
 
-            fragmentTransaction.replace(R.id.flContent, fragment).commit();
-        }
+			fragmentTransaction.replace(R.id.flContent, fragment).commit();
+		}
 
-    }
+	}
 
 	public static void setDrawerIdleMode() {
 		// The following lines makes the user able to open the drawer after coming from a

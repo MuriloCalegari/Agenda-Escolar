@@ -134,4 +134,8 @@ public class GradesLineAdapter extends RecyclerView.Adapter<GradesBaseLineHolder
 	public long getItemId(int position) {
 		return position;
 	}
+
+	public Subject getItem(int position) {
+		return subjects.get(position);
+	}
 }

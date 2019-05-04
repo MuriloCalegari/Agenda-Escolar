@@ -22,10 +22,14 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.RecyclerView;
+
 import calegari.murilo.agendaescolar.calendar.SchedulesFragment;
 import calegari.murilo.agendaescolar.grades.GradesFragment;
+import calegari.murilo.agendaescolar.grades.GradesLineAdapter;
 import calegari.murilo.agendaescolar.home.HomeFragment;
 import calegari.murilo.agendaescolar.settings.SettingsActivity;
+import calegari.murilo.agendaescolar.subjectgrades.SubjectGradesFragment;
 import calegari.murilo.agendaescolar.subjects.SubjectsFragment;
 
 import android.view.MenuItem;
@@ -39,6 +43,8 @@ import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity
 		implements NavigationView.OnNavigationItemSelectedListener {
+
+	public static Fragment currentFragment;
 
 	public static DrawerLayout drawer;
 	public static ValueAnimator anim;
@@ -157,6 +163,10 @@ public class MainActivity extends AppCompatActivity
 		drawer = findViewById(R.id.drawer_layout);
 		if (drawer.isDrawerOpen(GravityCompat.START)) {
 			drawer.closeDrawer(GravityCompat.START);
+		} else if(currentFragment instanceof GradesFragment && GradesFragment.inboxRecyclerView.getPage().isExpandedOrExpanding()){
+			GradesFragment.inboxRecyclerView.collapse();
+		} else if(!(currentFragment instanceof HomeFragment)) {
+			startFragment(HomeFragment.class, true);
 		} else {
 			super.onBackPressed();
 		}
@@ -225,7 +235,58 @@ public class MainActivity extends AppCompatActivity
 		return true;
 	}
 
+	public void refreshCurrentFragment() {
+		/*
+		Fragment currentFragment = null;
+
+		try {
+			currentFragment = fragmentManager.findFragmentById(R.id.flContent);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		*/
+		if(currentFragment != null) {
+
+			// Refresh SubjectGradesFragment if it is expanded
+			if(currentFragment instanceof GradesFragment && GradesFragment.inboxRecyclerView.getPage().isExpanded()) {
+				Fragment fragment = null;
+				try {
+					fragment = SubjectGradesFragment.class.newInstance();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+
+				if(fragment != null) {
+					int expandedItemPosition = (int) GradesFragment.inboxRecyclerView.getExpandedItem().getItemId();
+					RecyclerView.Adapter lineAdapter = GradesFragment.inboxRecyclerView.getAdapter();
+					if(lineAdapter instanceof GradesLineAdapter) {
+						int subjectId = ((GradesLineAdapter) lineAdapter).getItem(expandedItemPosition).getId();
+						Bundle bundle = new Bundle();
+						bundle.putInt("subjectId", subjectId);
+
+						fragment.setArguments(bundle);
+
+						fragmentManager
+								.beginTransaction()
+								.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+								.replace(R.id.frameLayoutContent, fragment)
+								.commit();
+					}
+				}
+			} else {
+				startFragment(currentFragment.getClass(), false);
+
+				// Every time a fragment is refreshed, drawer should be in idle mode
+				setDrawerIdleMode();
+			}
+		}
+	}
+
 	public static void startFragment(Class fragmentClass, boolean useAnimations) {
+		startFragment(fragmentClass, useAnimations, null);
+	}
+
+	public static void startFragment(Class fragmentClass, boolean useAnimations, Bundle bundle) {
 
 		Fragment fragment = null;
 		try {
@@ -236,15 +297,20 @@ public class MainActivity extends AppCompatActivity
 
 		// Insert the fragment by replacing any existing fragment
 		if (fragment != null) {
+
+			if(bundle != null) {
+				fragment.setArguments(bundle);
+			}
+
 			FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
 			if(useAnimations) {
 				fragmentTransaction.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
 			}
 
-			fragmentTransaction.replace(R.id.flContent, fragment).commit();
+			fragmentTransaction.replace(R.id.flContent, fragment).commitAllowingStateLoss();
+			currentFragment = fragment;
 		}
-
 	}
 
 	public static void setDrawerIdleMode() {

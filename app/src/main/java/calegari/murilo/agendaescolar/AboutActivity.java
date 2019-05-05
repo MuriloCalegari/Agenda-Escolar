@@ -70,10 +70,16 @@ public class AboutActivity extends AppCompatActivity {
 				.setWebsite("https://www.freepik.com/free-photos-vectors/background"))
 				.build());
 
+		Attribution GRAPH_ICON_FLATICON = ((new Attribution.Builder("Graph icon")
+				.addCopyrightNotice("Created by Freepik - www.flaticon.com ")
+				.setWebsite("http://www.freepik.com"))
+				.build());
+
 		AttributionPresenter attributionPresenter = new AttributionPresenter.Builder(this)
 				.addAttributions(
 						SCHOOL_VECTOR_FREEPIK,
-						BACKGROUND_VECTOR_FREEPIK
+						BACKGROUND_VECTOR_FREEPIK,
+						GRAPH_ICON_FLATICON
 				)
 				.build();
 

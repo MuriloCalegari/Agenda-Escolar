@@ -9,15 +9,19 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.function.IntBinaryOperator;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.Group;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import calegari.murilo.agendaescolar.BaseFragment;
 import calegari.murilo.agendaescolar.MainActivity;
 import calegari.murilo.agendaescolar.R;
 import calegari.murilo.agendaescolar.databases.SubjectDatabaseHelper;
+import calegari.murilo.agendaescolar.subjects.Subject;
 import me.saket.inboxrecyclerview.InboxRecyclerView;
 import me.saket.inboxrecyclerview.page.ExpandablePageLayout;
 import me.saket.inboxrecyclerview.page.InterceptResult;
@@ -27,7 +31,8 @@ public class GradesFragment extends BaseFragment {
 
 	public static InboxRecyclerView inboxRecyclerView;
 	private GradesLineAdapter mAdapter;
-	SubjectDatabaseHelper subjectDatabase;
+	private SubjectDatabaseHelper subjectDatabase;
+	private Group emptyStateGroup;
 
 	@Nullable
 	@Override
@@ -40,7 +45,8 @@ public class GradesFragment extends BaseFragment {
 	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 
-		inboxRecyclerView = getView().findViewById(R.id.inbox_recyclerview);
+		inboxRecyclerView = view.findViewById(R.id.inbox_recyclerview);
+		emptyStateGroup = view.findViewById(R.id.emptyStateGroup);
 
 		// Sets the toolbar name and item checked on nav bar
 		AppCompatActivity activity = (AppCompatActivity) getContext();
@@ -126,17 +132,28 @@ public class GradesFragment extends BaseFragment {
 	}
 
 	private void initInboxRecyclerView() {
-		mAdapter = new GradesLineAdapter(new ArrayList<>(0), getContext(), getView());
-
-		// Needed to avoid "Adapter needs to have stable IDs so that the expanded item can be restored across orientation changes." exception
-		mAdapter.setHasStableIds(true);
-
-		inboxRecyclerView.setAdapter(mAdapter);
-
-		// Populates the list:
 		subjectDatabase = new SubjectDatabaseHelper(getContext());
 
-		mAdapter.setSubjects(subjectDatabase.getAllSubjects());
+		// If list is empty, display empty state image
+
+		List<Subject> subjectList = subjectDatabase.getAllSubjects();
+
+		if(subjectList.isEmpty()) {
+			inboxRecyclerView.setVisibility(View.GONE);
+			emptyStateGroup.setVisibility(View.VISIBLE);
+		} else {
+			inboxRecyclerView.setVisibility(View.VISIBLE);
+			emptyStateGroup.setVisibility(View.GONE);
+
+			mAdapter = new GradesLineAdapter(new ArrayList<>(0), getContext(), getView());
+
+			// Needed to avoid "Adapter needs to have stable IDs so that the expanded item can be restored across orientation changes." exception
+			mAdapter.setHasStableIds(true);
+
+			inboxRecyclerView.setAdapter(mAdapter);
+
+			mAdapter.setSubjects(subjectList);
+		}
 
 		subjectDatabase.close();
 	}

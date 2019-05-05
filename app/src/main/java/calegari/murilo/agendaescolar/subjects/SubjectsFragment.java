@@ -26,11 +26,11 @@ import java.util.List;
 
 public class SubjectsFragment extends BaseFragment {
 
-    RecyclerView mRecyclerView;
-    FloatingActionButton fab;
+    private RecyclerView mRecyclerView;
+    private FloatingActionButton fab;
     private SubjectLineAdapter mAdapter;
-    SubjectDatabaseHelper subjectDatabase;
-    Group emptyStateGroup;
+    private SubjectDatabaseHelper subjectDatabase;
+    private Group emptyStateGroup;
 
     @Nullable
     @Override
@@ -117,7 +117,7 @@ public class SubjectsFragment extends BaseFragment {
 
             // Populates the list:
 
-            mAdapter.setSubjects(subjectDatabase.getAllSubjects());
+            mAdapter.setSubjects(subjectList);
         }
 
         subjectDatabase.close();

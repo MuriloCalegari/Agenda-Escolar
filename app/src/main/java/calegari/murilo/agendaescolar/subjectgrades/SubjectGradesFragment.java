@@ -14,12 +14,12 @@ import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.Group;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import calegari.murilo.agendaescolar.R;
 import calegari.murilo.agendaescolar.databases.SubjectGradesDatabaseHelper;
-import calegari.murilo.agendaescolar.grades.GradesFragment;
 
 public class SubjectGradesFragment extends Fragment {
 
@@ -28,6 +28,7 @@ public class SubjectGradesFragment extends Fragment {
 	private SubjectGradesLineAdapter mAdapter;
 	SubjectGradesDatabaseHelper subjectGradesDatabase;
 	String gradeSubjectAbbreviation;
+	private Group emptyStateGroup;
 
 	@Nullable
 	@Override
@@ -41,6 +42,7 @@ public class SubjectGradesFragment extends Fragment {
 
 		fab = view.findViewById(R.id.floatingActionButton);
 		mRecyclerView = view.findViewById(R.id.recyclerView);
+		emptyStateGroup = view.findViewById(R.id.emptyStateGroup);
 
 		Bundle bundle = this.getArguments();
 		gradeSubjectAbbreviation = bundle.getString("subjectAbbreviation");
@@ -107,5 +109,13 @@ public class SubjectGradesFragment extends Fragment {
 
 		cursor.close();
 		subjectGradesDatabase.close();
+
+		if(mAdapter.getItemCount() == 0) {
+			mRecyclerView.setVisibility(View.GONE);
+			emptyStateGroup.setVisibility(View.VISIBLE);
+		} else {
+			emptyStateGroup.setVisibility(View.GONE);
+			mRecyclerView.setVisibility(View.VISIBLE);
+		}
 	}
 }

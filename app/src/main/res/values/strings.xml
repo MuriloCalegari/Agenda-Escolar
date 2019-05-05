@@ -130,5 +130,8 @@
     <string name="title_activity_edit_class_time">Edit class</string>
     <string name="confirm_class_event_delete_message" />
     <string name="confirm_class_event_delete_title">Delete class?</string>
-    <string name="no_grades_availabe">You still haven\'t added any grade!</string>
+    <string name="no_grades_available">You still haven\'t added any grade!</string>
+    <string name="no_subjects_available">You still haven\'t added any subject!</string>
+
+    <string name="nothing_around_here">Nothing around here.</string>
 </resources>

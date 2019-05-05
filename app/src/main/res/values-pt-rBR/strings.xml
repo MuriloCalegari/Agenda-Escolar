@@ -125,6 +125,8 @@
     <string name="confirm_class_event_delete_title">Deletar aula?</string>
     <string name="confirm_class_event_delete_message">Isto irá permanentemente deletar esta aula</string>
     <string name="title_activity_edit_class_time">Editar aula</string>
-    <string name="no_grades_availabe">Você ainda não adicionou nenhuma nota!</string>
+    <string name="no_grades_available">Você ainda não adicionou nenhuma nota!</string>
+    <string name="no_subjects_available">Você não adicionou nenhuma matéria</string>
+    <string name="nothing_around_here">Nada por aqui.</string>
 
 </resources>

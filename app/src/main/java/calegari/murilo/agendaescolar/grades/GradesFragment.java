@@ -1,6 +1,7 @@
 package calegari.murilo.agendaescolar.grades;
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.view.LayoutInflater;
@@ -106,9 +107,14 @@ public class GradesFragment extends BaseFragment {
 				So we need to reload the entire GradesFragment
 				 */
 
-				PowerManager powerManager = (PowerManager) activity.getSystemService(Context.POWER_SERVICE);
-				if (activity instanceof MainActivity && powerManager.isPowerSaveMode()) {
-					((MainActivity) activity).refreshCurrentFragment();
+				// Some versions of Android do not break this functionally, for example, Android Pie
+				// TODO Check when this starts to break
+
+				if(Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
+					PowerManager powerManager = (PowerManager) activity.getSystemService(Context.POWER_SERVICE);
+					if(activity instanceof MainActivity && powerManager.isPowerSaveMode()) {
+						((MainActivity) activity).refreshCurrentFragment();
+					}
 				}
 			}
 

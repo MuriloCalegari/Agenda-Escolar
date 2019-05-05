@@ -14,7 +14,7 @@
             android:id="@+id/emptyStateGroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:constraint_referenced_ids="emptyStateTextTitle,emptyStateImageView,emptyStateTextSubtitle"
+            app:constraint_referenced_ids="emptyStateTextTitle,emptyStateImageView,emptyStateTextSubtitle,newSubjectButton"
             tools:visibility="invisible" />
 
         <ImageView
@@ -59,6 +59,19 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/emptyStateTextTitle" />
+
+        <Button
+            android:id="@+id/newSubjectButton"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:text="@string/title_activity_new_subject"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/emptyStateTextSubtitle" />
 
         <me.saket.inboxrecyclerview.InboxRecyclerView
             android:id="@+id/inbox_recyclerview"

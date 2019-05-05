@@ -1,16 +1,17 @@
 package calegari.murilo.agendaescolar.grades;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.IntBinaryOperator;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,6 +22,7 @@ import calegari.murilo.agendaescolar.BaseFragment;
 import calegari.murilo.agendaescolar.MainActivity;
 import calegari.murilo.agendaescolar.R;
 import calegari.murilo.agendaescolar.databases.SubjectDatabaseHelper;
+import calegari.murilo.agendaescolar.subjects.NewSubjectActivity;
 import calegari.murilo.agendaescolar.subjects.Subject;
 import me.saket.inboxrecyclerview.InboxRecyclerView;
 import me.saket.inboxrecyclerview.page.ExpandablePageLayout;
@@ -33,6 +35,7 @@ public class GradesFragment extends BaseFragment {
 	private GradesLineAdapter mAdapter;
 	private SubjectDatabaseHelper subjectDatabase;
 	private Group emptyStateGroup;
+	private View view;
 
 	@Nullable
 	@Override
@@ -44,6 +47,7 @@ public class GradesFragment extends BaseFragment {
 	@Override
 	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
+		this.view = view;
 
 		inboxRecyclerView = view.findViewById(R.id.inbox_recyclerview);
 		emptyStateGroup = view.findViewById(R.id.emptyStateGroup);
@@ -141,6 +145,12 @@ public class GradesFragment extends BaseFragment {
 		if(subjectList.isEmpty()) {
 			inboxRecyclerView.setVisibility(View.GONE);
 			emptyStateGroup.setVisibility(View.VISIBLE);
+
+			Button newSubjectButton = view.findViewById(R.id.newSubjectButton);
+			newSubjectButton.setOnClickListener(v -> {
+				Intent newSubjectIntent = new Intent(getContext(), NewSubjectActivity.class);
+				startActivity(newSubjectIntent);
+			});
 		} else {
 			inboxRecyclerView.setVisibility(View.VISIBLE);
 			emptyStateGroup.setVisibility(View.GONE);

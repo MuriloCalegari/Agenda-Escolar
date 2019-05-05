@@ -128,5 +128,6 @@
     <string name="no_grades_available">Você ainda não adicionou nenhuma nota!</string>
     <string name="no_subjects_available">Você não adicionou nenhuma matéria</string>
     <string name="nothing_around_here">Nada por aqui.</string>
+    <string name="copyright">Copyright</string>
 
 </resources>

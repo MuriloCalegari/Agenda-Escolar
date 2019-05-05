@@ -1,10 +1,8 @@
 package calegari.murilo.agendaescolar;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import calegari.murilo.agendaescolar.utils.Libraries;
 import mehdi.sakout.aboutpage.AboutPage;
 import mehdi.sakout.aboutpage.Element;
 import android.view.View;
@@ -12,7 +10,6 @@ import android.widget.LinearLayout;
 
 import com.franmontiel.attributionpresenter.AttributionPresenter;
 import com.franmontiel.attributionpresenter.entities.Attribution;
-import com.franmontiel.attributionpresenter.entities.Library;
 import com.franmontiel.attributionpresenter.entities.License;
 
 import org.w3c.dom.Attr;

@@ -33,6 +33,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.Group;
 import androidx.fragment.app.Fragment;
 import calegari.murilo.agendaescolar.MainActivity;
 import calegari.murilo.agendaescolar.R;
@@ -43,6 +44,7 @@ import calegari.murilo.agendaescolar.utils.Tools;
 public class HomeFragment extends Fragment {
 
 	private BarData data;
+	private View view;
 
 	@Nullable
 	@Override
@@ -53,6 +55,8 @@ public class HomeFragment extends Fragment {
 	@Override
 	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
+
+		this.view = view;
 
 		TextView gradesChartTitle = view.findViewById(R.id.titleTextView);
 		gradesChartTitle.setText(R.string.your_grades);
@@ -86,7 +90,9 @@ public class HomeFragment extends Fragment {
 
 		Cursor cursor = subjectDatabaseHelper.getAllDataInAverageGradeOrder();
 
-		BarChart chart = getView().findViewById(R.id.chart);
+		BarChart chart = view.findViewById(R.id.chart);
+		Group emptyStateGroup = view.findViewById(R.id.emptyStateGroup);
+
 		chart.setNoDataText(getString(R.string.no_grades_available));
 
 		int subjectAbbreviationIndex = cursor.getColumnIndex(SubjectDatabaseHelper.SubjectEntry.COLUMN_SUBJECT_ABBREVIATION);
@@ -123,6 +129,9 @@ public class HomeFragment extends Fragment {
 		data = new BarData(barDataSetList);
 
 		if(data.getDataSetCount() != 0) {
+			chart.setVisibility(View.VISIBLE);
+			emptyStateGroup.setVisibility(View.GONE);
+
 			// Defines behavior for the data, including labels
 
 			data.setBarWidth(0.9f);
@@ -217,6 +226,9 @@ public class HomeFragment extends Fragment {
 				public void onNothingSelected() {}
 			});
 			*/
+		} else {
+			chart.setVisibility(View.INVISIBLE); // If data is empty, show empty state info instead
+			emptyStateGroup.setVisibility(View.VISIBLE);
 		}
 
 		cursor.close();

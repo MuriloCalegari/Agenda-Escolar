@@ -270,7 +270,7 @@ public class MainActivity extends AppCompatActivity
 								.beginTransaction()
 								.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
 								.replace(R.id.frameLayoutContent, fragment)
-								.commit();
+								.commitAllowingStateLoss();
 					}
 				}
 			} else {

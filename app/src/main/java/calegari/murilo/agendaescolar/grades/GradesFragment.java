@@ -2,13 +2,16 @@ package calegari.murilo.agendaescolar.grades;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +33,8 @@ import me.saket.inboxrecyclerview.page.InterceptResult;
 import me.saket.inboxrecyclerview.page.SimplePageStateChangeCallbacks;
 
 public class GradesFragment extends BaseFragment {
+
+	private String TAG = "GradesFragment";
 
 	public static InboxRecyclerView inboxRecyclerView;
 	private GradesLineAdapter mAdapter;
@@ -58,8 +63,6 @@ public class GradesFragment extends BaseFragment {
 		MainActivity.navigationView.setCheckedItem(R.id.nav_grades);
 
 		setupInboxRecyclerView();
-		initInboxRecyclerView();
-
 	}
 
 	@Override
@@ -143,6 +146,15 @@ public class GradesFragment extends BaseFragment {
 		List<Subject> subjectList = subjectDatabase.getAllSubjects();
 
 		if(subjectList.isEmpty()) {
+			ImageView emptyStateImageView = view.findViewById(R.id.emptyStateImageView);
+
+			// Some devices were throwing a ResourcesNotFoundException, so it's important to catch it
+			try {
+				emptyStateImageView.setImageResource(R.drawable.img_people_climbing_books_trophy);
+			} catch (Resources.NotFoundException e) {
+				Log.e(TAG, e.getMessage());
+			}
+
 			inboxRecyclerView.setVisibility(View.GONE);
 			emptyStateGroup.setVisibility(View.VISIBLE);
 

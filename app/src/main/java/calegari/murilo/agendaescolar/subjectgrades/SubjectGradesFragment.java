@@ -1,12 +1,15 @@
 package calegari.murilo.agendaescolar.subjectgrades;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -23,12 +26,13 @@ import calegari.murilo.agendaescolar.databases.SubjectGradesDatabaseHelper;
 
 public class SubjectGradesFragment extends Fragment {
 
-	RecyclerView mRecyclerView;
-	FloatingActionButton fab;
-	private SubjectGradesLineAdapter mAdapter;
-	SubjectGradesDatabaseHelper subjectGradesDatabase;
-	String gradeSubjectAbbreviation;
+	private String TAG = "SubjectGradesFragment";
+
+	private RecyclerView mRecyclerView;
+	private FloatingActionButton fab;
+	private String gradeSubjectAbbreviation;
 	private Group emptyStateGroup;
+	private View view;
 
 	@Nullable
 	@Override
@@ -39,6 +43,7 @@ public class SubjectGradesFragment extends Fragment {
 	@Override
 	public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
+		this.view = view;
 
 		fab = view.findViewById(R.id.floatingActionButton);
 		mRecyclerView = view.findViewById(R.id.recyclerView);
@@ -79,12 +84,12 @@ public class SubjectGradesFragment extends Fragment {
 		LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
 		mRecyclerView.setLayoutManager(layoutManager);
 
-		mAdapter = new SubjectGradesLineAdapter(new ArrayList<>(0));
+		SubjectGradesLineAdapter mAdapter = new SubjectGradesLineAdapter(new ArrayList<>(0));
 
 		mRecyclerView.setAdapter(mAdapter);
 
 		// Populates the list
-		subjectGradesDatabase = new SubjectGradesDatabaseHelper(getContext());
+		SubjectGradesDatabaseHelper subjectGradesDatabase = new SubjectGradesDatabaseHelper(getContext());
 
 		Cursor cursor = subjectGradesDatabase.getSubjectGradesData(gradeSubjectAbbreviation);
 
@@ -111,6 +116,15 @@ public class SubjectGradesFragment extends Fragment {
 		subjectGradesDatabase.close();
 
 		if(mAdapter.getItemCount() == 0) {
+			ImageView emptyStateImageView = view.findViewById(R.id.emptyStateImageView);
+
+			// Some devices were throwing a ResourcesNotFoundException, so it's important to catch it
+			try {
+				emptyStateImageView.setImageResource(R.drawable.img_man_with_pencil_marking_checklist);
+			} catch (Resources.NotFoundException e) {
+				Log.e(TAG, e.getMessage());
+			}
+
 			mRecyclerView.setVisibility(View.GONE);
 			emptyStateGroup.setVisibility(View.VISIBLE);
 		} else {

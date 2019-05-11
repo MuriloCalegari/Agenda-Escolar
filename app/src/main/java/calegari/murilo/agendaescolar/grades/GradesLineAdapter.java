@@ -50,7 +50,6 @@ public class GradesLineAdapter extends RecyclerView.Adapter<GradesBaseLineHolder
 	@NonNull
 	@Override
 	public GradesBaseLineHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
 		return new GradesBaseLineHolder(LayoutInflater.from(parent.getContext())
 				.inflate(R.layout.subject_grade_card,parent,false));
 	}

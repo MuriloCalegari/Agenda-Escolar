@@ -1,6 +1,7 @@
 package calegari.murilo.agendaescolar.subjects;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,22 +16,25 @@ import calegari.murilo.agendaescolar.MainActivity;
 import calegari.murilo.agendaescolar.databases.SubjectDatabaseHelper;
 import calegari.murilo.agendaescolar.R;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class SubjectsFragment extends BaseFragment {
 
+    private String TAG = "SubjectsFragment";
+
     private RecyclerView mRecyclerView;
     private FloatingActionButton fab;
     private SubjectLineAdapter mAdapter;
     private SubjectDatabaseHelper subjectDatabase;
     private Group emptyStateGroup;
+    private View view;
 
     @Nullable
     @Override
@@ -42,17 +46,13 @@ public class SubjectsFragment extends BaseFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        this.view = view;
 
         fab = getView().findViewById(R.id.floatingActionButton);
         mRecyclerView = getView().findViewById(R.id.recyclerView);
         emptyStateGroup = getView().findViewById(R.id.emptyStateGroup);
 
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                newSubject();
-            }
-        });
+        fab.setOnClickListener(v -> newSubject());
 
         // Hides floating action button on scroll down
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -102,6 +102,15 @@ public class SubjectsFragment extends BaseFragment {
         List<Subject> subjectList = subjectDatabase.getAllSubjects();
 
         if(subjectList.isEmpty()) {
+            ImageView emptyStateImageView = view.findViewById(R.id.emptyStateImageView);
+
+            // Some devices were throwing a ResourcesNotFoundException, so it's important to catch it
+            try {
+                emptyStateImageView.setImageResource(R.drawable.img_people_climbing_books_and_graduation_cap);
+            } catch (Resources.NotFoundException e) {
+                Log.e(TAG, e.getMessage());
+            }
+
             mRecyclerView.setVisibility(View.GONE);
             emptyStateGroup.setVisibility(View.VISIBLE);
         } else {
